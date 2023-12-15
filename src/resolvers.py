@@ -12,14 +12,17 @@ def get_todo_list(user_id: int | None = None) -> list[TodoType]:
     return all_todos
 
 
-def get_users_with_todos(info: Info) -> list[UserWithTodos]:
+def get_users_with_todos(info: Info, done: bool | None = None) -> list[UserWithTodos]:
     data = get_data()
     result = []
     for user in data.users:
         user_with_todos = UserWithTodos(**user.__dict__)
         todos_requested = any(field for field in info.selected_fields[0].selections if field.name == "todos")
         if todos_requested:
-            user_with_todos.todos = [todo for todo in data.todos if todo.user_id == user.id]
+            todos_generator = (todo for todo in data.todos if todo.user_id == user.id)
+            if done is not None:
+                todos_generator = (todo for todo in todos_generator if todo.done == done)
+            user_with_todos.todos = list(todos_generator)
         result.append(user_with_todos)
     return result
 
