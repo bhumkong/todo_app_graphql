@@ -1,5 +1,7 @@
+from strawberry.types import Info
+
 from src.data import get_data, save_data
-from src.models import Todo
+from src.models import Todo, UserWithTodos
 from src.types import TodoType, TodoCreate, TodoUpdate
 
 
@@ -8,6 +10,18 @@ def get_todo_list(user_id: int | None = None) -> list[TodoType]:
     if user_id is not None:
         all_todos = [todo for todo in all_todos if todo.user_id == user_id]
     return all_todos
+
+
+def get_users_with_todos(info: Info) -> list[UserWithTodos]:
+    data = get_data()
+    result = []
+    for user in data.users:
+        user_with_todos = UserWithTodos(**user.__dict__)
+        todos_requested = any(field for field in info.selected_fields[0].selections if field.name == "todos")
+        if todos_requested:
+            user_with_todos.todos = [todo for todo in data.todos if todo.user_id == user.id]
+        result.append(user_with_todos)
+    return result
 
 
 def mark_done(todo_id: int, done: bool) -> TodoType:

@@ -17,3 +17,7 @@ class User(BaseModel):
 class Data(BaseModel):
     todos: list[Todo]
     users: list[User]
+
+
+class UserWithTodos(User):
+    todos: list[Todo] | None = None

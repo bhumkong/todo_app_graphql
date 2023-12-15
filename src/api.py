@@ -1,10 +1,11 @@
 from src import resolvers
-from src.types import TodoType
+from src.types import TodoType, UserWithTodosType
 from strawberry import type, field, Schema
 
 
 @type
 class Query:
+    users: list[UserWithTodosType] = field(resolver=resolvers.get_users_with_todos)
     todo_list: list[TodoType] = field(resolver=resolvers.get_todo_list)
 
 

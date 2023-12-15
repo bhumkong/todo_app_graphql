@@ -25,3 +25,8 @@ class TodoUpdate:
     title: str | None = None
     description: str | None = None
     user_id: int | None = None
+
+
+@strawberry.experimental.pydantic.type(model=User, all_fields=True)
+class UserWithTodosType:
+    todos: list[TodoType] | None = None
