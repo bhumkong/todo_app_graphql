@@ -1,6 +1,6 @@
 from src import resolvers
 from src.types import TodoType, UserWithTodosType
-from strawberry import type, field, Schema
+from strawberry import type, field, mutation, Schema
 
 
 @type
@@ -11,9 +11,9 @@ class Query:
 
 @type
 class Mutation:
-    mark_done: TodoType = field(resolver=resolvers.mark_done)
-    create_todo: TodoType = field(resolver=resolvers.create_todo)
-    update_todo: TodoType = field(resolver=resolvers.update_todo)
+    mark_done: TodoType = mutation(resolver=resolvers.mark_done)
+    create_todo: TodoType = mutation(resolver=resolvers.create_todo)
+    update_todo: TodoType = mutation(resolver=resolvers.update_todo)
 
 
 schema = Schema(Query, Mutation)
